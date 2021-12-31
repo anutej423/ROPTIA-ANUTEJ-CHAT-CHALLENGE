@@ -841,7 +841,6 @@ C:\Users\anu\Source\Repos\ROPTIA-ANUTEJ-CHAT-CHALLENGE\Chat.Web\bin\Debug\netcor
 C:\Users\anu\Source\Repos\ROPTIA-ANUTEJ-CHAT-CHALLENGE\Chat.Web\bin\Debug\netcoreapp3.1\runtimes\unix\lib\netcoreapp2.0\System.Runtime.Caching.dll
 C:\Users\anu\Source\Repos\ROPTIA-ANUTEJ-CHAT-CHALLENGE\Chat.Web\bin\Debug\netcoreapp3.1\runtimes\win\lib\netcoreapp2.0\System.Runtime.Caching.dll
 C:\Users\anu\Source\Repos\ROPTIA-ANUTEJ-CHAT-CHALLENGE\Chat.Web\bin\Debug\netcoreapp3.1\runtimes\win\lib\netstandard2.0\System.Security.Cryptography.ProtectedData.dll
-C:\Users\anu\Source\Repos\ROPTIA-ANUTEJ-CHAT-CHALLENGE\Chat.Web\obj\Debug\netcoreapp3.1\Chat.Web.csproj.AssemblyReference.cache
 C:\Users\anu\Source\Repos\ROPTIA-ANUTEJ-CHAT-CHALLENGE\Chat.Web\obj\Debug\netcoreapp3.1\Chat.Web.GeneratedMSBuildEditorConfig.editorconfig
 C:\Users\anu\Source\Repos\ROPTIA-ANUTEJ-CHAT-CHALLENGE\Chat.Web\obj\Debug\netcoreapp3.1\Chat.Web.AssemblyInfoInputs.cache
 C:\Users\anu\Source\Repos\ROPTIA-ANUTEJ-CHAT-CHALLENGE\Chat.Web\obj\Debug\netcoreapp3.1\Chat.Web.AssemblyInfo.cs
@@ -863,9 +862,7 @@ C:\Users\anu\Source\Repos\ROPTIA-ANUTEJ-CHAT-CHALLENGE\Chat.Web\obj\Debug\netcor
 C:\Users\anu\Source\Repos\ROPTIA-ANUTEJ-CHAT-CHALLENGE\Chat.Web\obj\Debug\netcoreapp3.1\Razor\Areas\Identity\Pages\_ValidationScriptsPartial.cshtml.g.cs
 C:\Users\anu\Source\Repos\ROPTIA-ANUTEJ-CHAT-CHALLENGE\Chat.Web\obj\Debug\netcoreapp3.1\Razor\Areas\Identity\Pages\_ViewImports.cshtml.g.cs
 C:\Users\anu\Source\Repos\ROPTIA-ANUTEJ-CHAT-CHALLENGE\Chat.Web\obj\Debug\netcoreapp3.1\Razor\Areas\Identity\Pages\_ViewStart.cshtml.g.cs
-C:\Users\anu\Source\Repos\ROPTIA-ANUTEJ-CHAT-CHALLENGE\Chat.Web\obj\Debug\netcoreapp3.1\Razor\Pages\Chat.cshtml.g.cs
 C:\Users\anu\Source\Repos\ROPTIA-ANUTEJ-CHAT-CHALLENGE\Chat.Web\obj\Debug\netcoreapp3.1\Razor\Pages\Error.cshtml.g.cs
-C:\Users\anu\Source\Repos\ROPTIA-ANUTEJ-CHAT-CHALLENGE\Chat.Web\obj\Debug\netcoreapp3.1\Razor\Pages\Index.cshtml.g.cs
 C:\Users\anu\Source\Repos\ROPTIA-ANUTEJ-CHAT-CHALLENGE\Chat.Web\obj\Debug\netcoreapp3.1\Razor\Pages\Privacy.cshtml.g.cs
 C:\Users\anu\Source\Repos\ROPTIA-ANUTEJ-CHAT-CHALLENGE\Chat.Web\obj\Debug\netcoreapp3.1\Razor\Pages\Shared\_Layout.cshtml.g.cs
 C:\Users\anu\Source\Repos\ROPTIA-ANUTEJ-CHAT-CHALLENGE\Chat.Web\obj\Debug\netcoreapp3.1\Razor\Pages\Shared\_ValidationScriptsPartial.cshtml.g.cs
@@ -878,3 +875,5 @@ C:\Users\anu\Source\Repos\ROPTIA-ANUTEJ-CHAT-CHALLENGE\Chat.Web\obj\Debug\netcor
 C:\Users\anu\Source\Repos\ROPTIA-ANUTEJ-CHAT-CHALLENGE\Chat.Web\obj\Debug\netcoreapp3.1\Chat.Web.dll
 C:\Users\anu\Source\Repos\ROPTIA-ANUTEJ-CHAT-CHALLENGE\Chat.Web\obj\Debug\netcoreapp3.1\Chat.Web.pdb
 C:\Users\anu\Source\Repos\ROPTIA-ANUTEJ-CHAT-CHALLENGE\Chat.Web\obj\Debug\netcoreapp3.1\Chat.Web.genruntimeconfig.cache
+C:\Users\anu\Source\Repos\ROPTIA-ANUTEJ-CHAT-CHALLENGE\Chat.Web\obj\Debug\netcoreapp3.1\Chat.Web.csproj.AssemblyReference.cache
+C:\Users\anu\Source\Repos\ROPTIA-ANUTEJ-CHAT-CHALLENGE\Chat.Web\obj\Debug\netcoreapp3.1\Razor\Pages\Index.cshtml.g.cs

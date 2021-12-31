@@ -10,11 +10,11 @@ using Microsoft.Extensions.Logging;
 namespace Chat.Web.Pages
 {
     [Authorize]
-    public class ChatModel : PageModel
+    public class IndexModel : PageModel
     {
-        private readonly ILogger<ChatModel> _logger;
+        private readonly ILogger<IndexModel> _logger;
 
-        public ChatModel(ILogger<ChatModel> logger)
+        public IndexModel(ILogger<IndexModel> logger)
         {
             _logger = logger;
         }
