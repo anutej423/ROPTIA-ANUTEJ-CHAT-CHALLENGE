@@ -10,7 +10,7 @@
 </div>
 
 <div class="app">
-   
+
     <div class="sidebar">
         <div class="profile">
             <div>
@@ -21,46 +21,48 @@
                 <button type="submit" class="btn-sign-out"><i class="fas fa-sign-out-alt"></i></button>
             </form>
         </div>
+
         <div class="header">
-            <h2>Chats</h2>
+            <h5>Chats</h5>
             <input type="hidden" id="hdnReciever" />
         </div>
 
-        <ul class="list-unstyled" id="chat-list" data-bind="foreach: chatUsers1">
-            <li data-bind="attr: { 'data-userName': $data.userName }, click: $parent.openChat.bind($data), css: { active: true}">
-                <div class="user" >
+        <ul class="list-unstyled" id="chat-list" data-bind="foreach: chatMembers">
+            <li data-bind="attr: { 'data-userName': $data.userName }, click: $parent.openChat.bind($data)">
+                <div class="user" data-bind="css: { active: $root.joinedChat() == $data.displayName()}">
                     <img src="~/images/icons/avatar1.png" class="user-avatar" data-bind="attr: { src: '/images/icons/' + $data.avatar() }" />
                     <div class="right-side">
                         <input type="hidden" class="username" data-bind="value: $data.userName" />
                         <span class="author" data-bind="text: $data.displayName"></span>
-                        
+
                     </div>
                 </div>
-                </li>
-                @*
-            <li>
+            </li>
 
-                <img src="~/images/icons/avatar1.png" class="user-avatar" data-bind="attr: { src: '/images/icons/' + $data.avatar() }" />
-                <div>
-                    <a href="#" data-bind="text: $data.displayName, attr: { 'data-userName': $data.userName }, click: $parent.openChat.bind($data), css: { active: $root.joinedChat() == $data.displayName()}"></a>
+        </ul>
 
-                </div>
-
-
-            </li>*@
+        <div class="header">
+            <h5>Chat Rooms</h5>
+            <a href="#" id="create-room" data-toggle="modal" data-target="#create-room-modal">
+                <i class="fas fa-plus"></i>
+            </a>
+        </div>
+        <ul class="rooms list-unstyled" id="room-list" data-bind="foreach: chatRooms">
+            <li><a href="#" data-bind="text: $data.name, attr: { 'data-roomId': $data.id }, click: $parent.joinRoom.bind($data), css: { active: $root.joinedRoom() == $data.name()}"></a></li>
         </ul>
 
 
     </div>
-    <div class="main-content" data-bind="visible: joinedChat().length == 0">
+    <div class="main-content" data-bind="visible: joinedChat().length == 0 && joinedRoom().length==0">
         <span class="m-auto">
-            Wellcome!! <span data-bind="text: myName"></span>
+            Welcome!! <b><span data-bind="text: myName"></span></b>
         </span>
     </div>
 
-    <div class="main-content" data-bind="visible: joinedChat().length > 0">
+    <div class="main-content" data-bind="visible: joinedChat().length > 0 || joinedRoom().length > 0">
         <div class="header">
-            <h4 id="joinedRoom">Chat with <b><span data-bind="text: joinedChat()"></span></b></h4>
+            <h4 id="joinedRoom" data-bind="visible: joinedChat().length > 0">Chat with <b><span data-bind="text: joinedChat()"></span></b></h4>
+            <h4 id="joinedRoom" data-bind="visible: joinedChat().length == 0 && joinedRoom().length >0">Lobby <b><span data-bind="text: joinedRoom()"></span></b></h4>
             <button type="button" class="btn btn-link" data-toggle="modal" data-target="#remove-room-modal">
                 <i class="fas fa-times"></i>
             </button>
@@ -133,10 +135,11 @@
             </div>
         </div>
     </div>
-    <div class="users-container">       
+   
+    <div class="users-container">
 
         <div class="header">
-            <h4>Users Online (<span data-bind="text: filteredChatUsers().length">0</span>)</h4>
+            <h5>Users Online (<span data-bind="text: filteredChatUsers().length">0</span>)</h5>
         </div>
         <ul id="users-list" class="list-unstyled" data-bind="foreach: filteredChatUsers">
             <li>
@@ -149,9 +152,28 @@
                     </div>
                 </div>
             </li>
-        </ul>
-        <input type="text" class="" placeholder="Search someone..." data-bind="value: filter, valueUpdate: 'afterkeydown'" />
+        </ul>       
+
+        <div class="users-container">
+            <div class="header">
+                <h5>Who's on Lobby (<span data-bind="text: filteredChatUsers().length">0</span>)</h5>
+            </div>
+            <ul id="users-list" class="list-unstyled" data-bind="foreach: filteredChatUsers">
+                <li>
+                    <div class="user">
+                        <img src="~/images/icons/avatar1.png" class="user-avatar" data-bind="attr: { src: '/images/icons/' + $data.avatar() }" />
+                        <div class="right-side">
+                            <input type="hidden" class="username" data-bind="value: $data.userName" />
+                            <span class="author" data-bind="text: $data.displayName, attr: { 'data-userName': $data.userName }, click: $parent.openChat.bind($data)"></span>
+                            <small data-bind="text: $data.device"></small>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+            <input type="text" class="" placeholder="Search someone..." data-bind="value: filter, valueUpdate: 'afterkeydown'" />
+        </div>
     </div>
+    
 </div>
 
 <div class="modal" id="create-room-modal" tabindex="-1" role="dialog">

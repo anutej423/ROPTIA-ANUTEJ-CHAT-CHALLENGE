@@ -1,4 +1,4 @@
-﻿$(document).ready(function () { 
+﻿$(document).ready(function () {
 
     var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
 
@@ -7,33 +7,32 @@
         viewModel.roomList();
         viewModel.chatUserList();
         viewModel.userList();
-        setTimeout(function () {
-            if (viewModel.chatRooms().length > 0) {
-                viewModel.joinRoom(viewModel.chatRooms()[0]);
-            }
-        }, 250);
     }).catch(function (err) {
         return console.error(err);
     });
 
     connection.on("newMessage", function (messageView, fromUser) {
-        debugger;
         var isMine = messageView.from === viewModel.myName();
         var message = new ChatMessage(messageView.content, messageView.timestamp, messageView.from, isMine, messageView.avatar);
         viewModel.chatMessages.push(message);
         $(".chat-body").animate({ scrollTop: $(".chat-body")[0].scrollHeight }, 1000);
 
         if (messageView.to && messageView.to == viewModel.myUserName()) {
-            
+
             viewModel.openChat(new ChatUser(fromUser.username, fromUser.fullName, fromUser.avatar, fromUser.currentRoom, fromUser.device));
-        }       
-        
+        }
     });
 
     connection.on("getProfileInfo", function (userName, displayName, avatar) {
         viewModel.myName(displayName);
         viewModel.myUserName(userName);
         viewModel.myAvatar(avatar);
+    });
+    connection.on("addUserOnConnect", function (userName, displayName, avatar, device) {
+        viewModel.userAdded(new ChatUser(userName, displayName, avatar, "", device));
+    });
+    connection.on("removeUserOnDisconnectConnect", function (userName) {
+        viewModel.userRemoved(userName);
     });
 
     connection.on("addUser", function (user) {
@@ -68,7 +67,7 @@
             // Join to the first room in list
             $("ul#room-list li a")[0].click();
         }
-    });     
+    });
 
     function AppViewModel() {
         var self = this;
@@ -76,7 +75,7 @@
         self.message = ko.observable("");
         self.chatRooms = ko.observableArray([]);
         self.chatUsers = ko.observableArray([]);
-        self.chatUsers1 = ko.observableArray([]);
+        self.chatMembers = ko.observableArray([]);
         self.chatMessages = ko.observableArray([]);
         self.joinedRoom = ko.observable("");
         self.joinedChat = ko.observable("");
@@ -104,12 +103,9 @@
         });
 
         self.sendNewMessage = function () {
-            //var text = self.message();
-            var reciever = $('#hdnReciever').val() ;
-            if (reciever != undefined) {
+            var reciever = $('#hdnReciever').val();
+            if (reciever != undefined && reciever != "") {
                 var receiver = reciever;
-                //var message = text.substring(text.indexOf(")") + 1, text.length);
-
                 if (receiver.length > 0 && self.message().trim().length > 0)
                     connection.invoke("SendPrivate", receiver.trim(), self.message().trim());
             }
@@ -140,25 +136,27 @@
 
 
         self.joinRoom = function (room) {
+            self.joinedChat("");
+            $('#hdnReciever').val("");
             connection.invoke("Join", room.name()).then(function () {
                 self.joinedRoom(room.name());
                 self.joinedRoomId(room.id());
                 self.userList();
                 self.messageHistory();
             });
-        }        
+        }
 
         self.openChat = function (user) {
-
+            self.joinedRoom("");
             if (user.userName() == self.myUserName()) {
                 return;
             }
-            var isExist = ko.utils.arrayFirst(self.chatUsers1(), function (item) {
+            var isExist = ko.utils.arrayFirst(self.chatMembers(), function (item) {
                 return item.userName() == user.userName()
             })
 
             if (!isExist) {
-                self.chatUsers1.push(
+                self.chatMembers.push(
                     new ChatUser(user.userName(),
                         user.displayName(),
                         user.avatar(),
@@ -169,7 +167,7 @@
             self.joinedChat(user.displayName());
             var username = user.userName();
             $('#hdnReciever').val(username);
-           
+            self.chatHistory(username)
             input.change();
             input.focus();
 
@@ -177,9 +175,9 @@
 
         self.chatUserList = function () {
             connection.invoke("GetChatUsers").then(function (result) {
-                self.chatUsers1.removeAll();
+                self.chatMembers.removeAll();
                 for (var i = 0; i < result.length; i++) {
-                    self.chatUsers1.push(
+                    self.chatMembers.push(
                         new ChatUser(result[i].username,
                             result[i].fullName,
                             result[i].avatar,
@@ -198,7 +196,6 @@
             });
         }
 
-
         self.userList = function () {
             connection.invoke("GetUsers", self.joinedRoom()).then(function (result) {
                 self.chatUsers.removeAll();
@@ -212,7 +209,6 @@
             });
         }
 
-
         self.createRoom = function () {
             var name = $("#roomName").val();
             connection.invoke("CreateRoom", name);
@@ -224,6 +220,21 @@
 
         self.messageHistory = function () {
             connection.invoke("GetMessageHistory", self.joinedRoom()).then(function (result) {
+                self.chatMessages.removeAll();
+                for (var i = 0; i < result.length; i++) {
+                    var isMine = result[i].from == self.myName();
+                    self.chatMessages.push(new ChatMessage(result[i].content,
+                        result[i].timestamp,
+                        result[i].from,
+                        isMine,
+                        result[i].avatar))
+                }
+
+                $(".chat-body").animate({ scrollTop: $(".chat-body")[0].scrollHeight }, 1000);
+            });
+        }
+        self.chatHistory = function (reciever) {
+            connection.invoke("GetChatHistory", self.myUserName(), reciever).then(function (result) {
                 self.chatMessages.removeAll();
                 for (var i = 0; i < result.length; i++) {
                     var isMine = result[i].from == self.myName();
@@ -309,6 +320,5 @@
 
     var viewModel = new AppViewModel();
     ko.applyBindings(viewModel);
-
 
 });

@@ -64,16 +64,16 @@
 
 
 
-        .sidebar ul li .user .active {
+        .sidebar ul li .active {
             background: #8abde6;
         }
 
         .sidebar ul li a:hover {
             background: #8abde6;
         }
-    /*.sidebar ul li a:before {
+    .sidebar ul li a:before {
       content: "#";
-      margin-right: 2px; }*/
+      margin-right: 2px; }
     .sidebar .profile {
         display: flex;
         justify-content: space-between;

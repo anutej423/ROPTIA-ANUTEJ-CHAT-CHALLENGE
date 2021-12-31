@@ -17,7 +17,7 @@ namespace Chat.Web.Models
         [ForeignKey("ToUserId")]
         [InverseProperty("ToMessages")]
         public ApplicationUser ToUser { get; set; }
-        public int ToRoomId { get; set; }
+        public int? ToRoomId { get; set; }
         public Room ToRoom { get; set; }
     }
 }

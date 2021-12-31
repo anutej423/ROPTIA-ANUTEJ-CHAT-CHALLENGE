@@ -113,7 +113,7 @@ namespace Chat.Web.Data.Migrations
                 b.Property<DateTime>("Timestamp")
                     .HasColumnType("datetime2");
 
-                b.Property<int>("ToRoomId")
+                b.Property<int?>("ToRoomId")
                     .HasColumnType("int");
 
                 b.HasKey("Id");

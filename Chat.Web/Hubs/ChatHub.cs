@@ -39,8 +39,7 @@ namespace Chat.Web.Hubs
                 // Who is the sender;
                 var sender = _Connections.Where(u => u.Username == IdentityName).First();
                 var user = _context.Users.Where(u => u.UserName == IdentityName).FirstOrDefault();
-                var toUser = _context.Users.Where(u => u.UserName == receiverName).FirstOrDefault();
-                var room = _context.Rooms.Where(r => r.Name == "PrivateChat").FirstOrDefault();
+                var toUser = _context.Users.Where(u => u.UserName == receiverName).FirstOrDefault();                
                 if (!string.IsNullOrEmpty(message.Trim()))
                 {
                     // Build the message
@@ -60,11 +59,11 @@ namespace Chat.Web.Hubs
                         Content = Regex.Replace(message, @"(?i)<(?!img|a|/a|/img).*?>", string.Empty),
                         FromUser = user,
                         ToUser = toUser,
-                        ToRoom = room,
+                        ToRoom = null,
                         Timestamp = DateTime.Now
                     };
-                    //_context.Messages.Add(msg);
-                    //_context.SaveChanges();
+                    _context.Messages.Add(msg);
+                    _context.SaveChanges();
 
                     var fromUser = GetUserByName(sender.Username);
 
@@ -231,25 +230,16 @@ namespace Chat.Web.Hubs
         public IEnumerable<UserViewModel> GetChatUsers()
         {
 
-            var currentUser = _Connections.Where(u => u.Username == IdentityName).FirstOrDefault();
-            //var users = _context.AppUsers
-            //    .Where(c => c.UserName != currentUser.Username);
+            var currentUser = _Connections.Where(u => u.Username == IdentityName).FirstOrDefault();            
             var messages = _context.Messages.Include(c => c.FromUser).Include(c => c.ToUser)
                 .Where(c => c.FromUser.UserName == currentUser.Username || (c.ToUser !=null && c.ToUser.UserName == currentUser.Username));
             foreach (var msgs in messages)
             {                
-                if (!_ChatUsers.Any(c => c.Username == msgs.FromUser.UserName) && msgs.FromUser.UserName != currentUser.Username)
+                if (msgs.FromUser != null && !_ChatUsers.Any(c => c?.Username == msgs.FromUser.UserName) && msgs.FromUser.UserName != currentUser.Username)
                     _ChatUsers.Add(_mapper.Map<ApplicationUser, UserViewModel>(msgs.FromUser));
-                if (!_ChatUsers.Any(c => c.Username == msgs.ToUser.UserName) && msgs.ToUser.UserName != currentUser.Username)
+                if (msgs.ToUser != null && !_ChatUsers.Any(c => c?.Username == msgs?.ToUser?.UserName) && msgs?.ToUser?.UserName != currentUser.Username)
                     _ChatUsers.Add(_mapper.Map<ApplicationUser, UserViewModel>(msgs.ToUser));
             }
-
-            //_ChatUsers = _ChatUsers.Where(c => c.Username != currentUser.Username).Distinct().ToList();
-            //foreach (var user in users)
-            //{
-            //    var userViewModel = _mapper.Map<ApplicationUser, UserViewModel>(user);
-            //    _ChatUsers.Add(userViewModel);
-            //}
 
             return _ChatUsers;
         }
@@ -261,7 +251,23 @@ namespace Chat.Web.Hubs
             return _mapper.Map<ApplicationUser, UserViewModel>(user);
         }
 
+        public IEnumerable<MessageViewModel> GetChatHistory(string userName, string receiverName)
+        {
+            var messageHistory = _context.Messages.Where(m=> 
+            ((m.ToUser != null && m.ToUser.UserName == userName) && (m.FromUser!=null &&m.FromUser.UserName == receiverName) ||
+            (m.ToUser != null && m.ToUser.UserName == receiverName) && (m.FromUser != null && m.FromUser.UserName == userName)
+            )
+            )
+                    .Include(m => m.FromUser)
+                    .Include(m => m.ToRoom)
+                    .OrderByDescending(m => m.Timestamp)
+                    .Take(20)
+                    .AsEnumerable()
+                    .Reverse()
+                    .ToList();
 
+            return _mapper.Map<IEnumerable<Message>, IEnumerable<MessageViewModel>>(messageHistory);
+        }
         public IEnumerable<MessageViewModel> GetMessageHistory(string roomName)
         {
             var messageHistory = _context.Messages.Where(m => m.ToRoom.Name == roomName)
@@ -292,8 +298,9 @@ namespace Chat.Web.Hubs
                 }
 
                 Clients.Caller.SendAsync("getProfileInfo", user.UserName,user.FullName, user.Avatar);
-                _ = Join("PrivateChat");
 
+                Clients.AllExcept(IdentityName).SendAsync("addUserOnConnect", user.UserName, user.FullName, user.Avatar, userViewModel.Device);
+               
             }
             catch (Exception ex)
             {
@@ -314,6 +321,9 @@ namespace Chat.Web.Hubs
 
                 // Remove mapping
                 _ConnectionsMap.Remove(user.Username);
+
+                Clients.AllExcept(IdentityName).SendAsync("removeUserOnDisconnectConnect", user.Username);
+                
             }
             catch (Exception ex)
             {

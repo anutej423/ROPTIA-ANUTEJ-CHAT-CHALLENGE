@@ -184,7 +184,7 @@ namespace Chat.Web.Data.Migrations
                     Timestamp = table.Column<DateTime>(nullable: false),
                     FromUserId = table.Column<string>(nullable: true),
                     ToUserId = table.Column<string>(nullable: true),
-                    ToRoomId = table.Column<int>(nullable: false)
+                    ToRoomId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
